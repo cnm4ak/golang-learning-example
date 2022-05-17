@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"mysql_slow_go/utils"
+	"os"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -76,6 +77,11 @@ func main() {
 		}
 		if ptCmd == "" {
 			fmt.Println("当前时间未匹配到慢日志信息")
+			f, err := os.OpenFile("log.html", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+			if err != nil {
+				log.Panicf("execute to file %s", err)
+			}
+			_, err = f.WriteString("无慢SQL语句 - " + *startT + " --- " + *endT)
 			return
 		}
 		json := utils.SLOWLOG_JSON{}
